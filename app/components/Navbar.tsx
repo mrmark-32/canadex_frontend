@@ -19,7 +19,7 @@ export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/menu/")
+    fetch("https://canadex-backend.onrender.com/admin/api/menuitem/")
       .then((res) => res.json())
       .then((data) => {
         setMenuItems(data);
