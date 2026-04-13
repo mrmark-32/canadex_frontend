@@ -105,7 +105,6 @@ export default function BlogSlider() {
                     <img
                       src={post.featured_image || "https://picsum.photos/600/400?random=20"}
                       alt={post.title}
-                      fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-4 left-4">
