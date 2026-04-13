@@ -22,7 +22,7 @@ export default function Navbar() {
 
   // Fetch menu from production backend
   useEffect(() => {
-    const API_URL = "https://canadex-backend.onrender.com/admin/api/menuitem/";   // ← Change if needed
+    const API_URL = "https://canadex-backend.onrender.com/api/menu/";   // ← Change if needed
 
     fetch(API_URL, {
       method: "GET",
