@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 type MenuItemType = {
   title: string;
@@ -13,73 +13,64 @@ type MenuItemType = {
 
 export default function Navbar() {
   const pathname = usePathname();
+
   const [menuItems, setMenuItems] = useState<MenuItemType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  // Use environment variable (highly recommended)
+  const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL || "https://canadex-backend.onrender.com";
 
-  // Fetch menu from production backend
   useEffect(() => {
-    const API_URL = "https://canadex-backend.onrender.com/api/menu/";   // ← Change if needed
+    const fetchMenu = async () => {
+      try {
+        setLoading(true);
+        setError(false);
 
-    fetch(API_URL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Add credentials if your API requires authentication later
-      // credentials: "include",
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        setMenuItems(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch menu:", err);
-        setMenuItems([]);
-        setLoading(false);
-      });
-  }, []);
+        const res = await fetch(`${API_BASE_URL}/api/menu/`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // You can add cache: 'no-store' if menu changes frequently
+        });
 
-  // Close mobile menu + dropdowns on route change
+        if (!res.ok) {
+          throw new Error(`Failed to fetch menu: ${res.status}`);
+        }
+
+        const data = await res.json();
+        setMenuItems(data);
+      } catch (err) {
+        console.error("Menu fetch error:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMenu();
+  }, [API_BASE_URL]);
+
+  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setOpenDropdown(null);
   }, [pathname]);
 
-  // Close dropdown when clicking outside (desktop)
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (openDropdown) {
-        const isInside = Object.values(dropdownRefs.current).some(
-          (ref) => ref && ref.contains(e.target as Node)
-        );
-        if (!isInside) setOpenDropdown(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [openDropdown]);
-
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
-  const toggleDropdown = (title: string) => {
-    setOpenDropdown((prev) => (prev === title ? null : title));
-  };
-
   return (
-    <nav className="white-bg shadow-md border-b sticky top-0 z-50 bg-white">
-      <div className="container mx-auto px-6">
+    <nav className="white-bg shadow-md border-b sticky top-0 z-50">
+      <div className="container mx-auto">
         <div className="flex justify-between items-center py-5">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 transition hover:scale-105">
+          <Link
+            href="/"
+            className="flex items-center gap-3 transition hover:scale-105"
+          >
             <h2 className="text-3xl font-bold tracking-tight text-secondary">
               Canadex
             </h2>
@@ -89,23 +80,20 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-10 text-[17px] font-medium">
             {loading ? (
               <div className="text-gray-500">Loading menu...</div>
+            ) : error ? (
+              <div className="text-red-500 text-sm">Menu unavailable</div>
             ) : (
               menuItems.map((item) => (
                 <div
                   key={item.title}
                   className="relative group"
-                  ref={(el) => {
-                    dropdownRefs.current[item.title] = el;
-                  }}
+                  onMouseEnter={() => setOpenDropdown(item.title)}
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
                   {item.children?.length > 0 ? (
-                    <button
-                      onMouseEnter={() => setOpenDropdown(item.title)}
-                      onClick={() => toggleDropdown(item.title)} // fallback for touch
-                      className="flex items-center gap-1.5 hover:text-secondary transition-colors py-1 focus:outline-none"
-                    >
+                    <button className="flex items-center gap-1.5 hover:text-secondary transition-colors py-1">
                       {item.title}
-                      <span className="text-xs mt-0.5 transition-transform">▼</span>
+                      <span className="text-xs mt-0.5">▼</span>
                     </button>
                   ) : (
                     <Link
@@ -126,14 +114,14 @@ export default function Navbar() {
                     <div
                       className={`absolute left-0 mt-4 w-64 bg-white text-gray-800 border border-gray-100 rounded-2xl shadow-2xl py-4 z-50 transition-all duration-200 ${
                         openDropdown === item.title
-                          ? "opacity-100 visible scale-100"
-                          : "opacity-0 invisible scale-95 pointer-events-none"
+                          ? "opacity-100 visible"
+                          : "opacity-0 invisible pointer-events-none"
                       }`}
                     >
                       {item.children.map((child) => (
                         <Link
                           key={child.title}
-                          href={child.url || "#"}
+                          href={child.url}
                           target={child.is_external ? "_blank" : "_self"}
                           className="block px-6 py-3 hover:bg-gray-100 hover:text-secondary transition rounded-xl mx-2"
                           onClick={() => setOpenDropdown(null)}
@@ -152,7 +140,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <Link
               href="/contact"
-              className="btn-primary px-8 py-3 text-base font-medium"
+              className="btn-primary px-8 py-3 text-base"
             >
               Get In Touch
             </Link>
@@ -161,8 +149,8 @@ export default function Navbar() {
           {/* Mobile Hamburger */}
           <button
             onClick={toggleMobileMenu}
-            className="md:hidden text-3xl text-secondary transition-transform active:scale-90"
-            aria-label="Toggle mobile menu"
+            className="md:hidden text-3xl text-secondary transition-transform"
+            aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? "✕" : "☰"}
           </button>
@@ -178,12 +166,16 @@ export default function Navbar() {
                 {item.children?.length > 0 ? (
                   <div>
                     <button
-                      onClick={() => toggleDropdown(item.title)}
+                      onClick={() =>
+                        setOpenDropdown(
+                          openDropdown === item.title ? null : item.title
+                        )
+                      }
                       className="flex items-center justify-between w-full py-3 text-left font-medium text-secondary"
                     >
                       {item.title}
                       <span
-                        className={`transition-transform duration-200 ${
+                        className={`transition-transform ${
                           openDropdown === item.title ? "rotate-180" : ""
                         }`}
                       >
@@ -192,11 +184,11 @@ export default function Navbar() {
                     </button>
 
                     {openDropdown === item.title && (
-                      <div className="pl-6 mt-2 flex flex-col gap-3 border-l border-gray-200">
+                      <div className="pl-6 mt-2 flex flex-col gap-3">
                         {item.children.map((child) => (
                           <Link
                             key={child.title}
-                            href={child.url || "#"}
+                            href={child.url}
                             target={child.is_external ? "_blank" : "_self"}
                             className="py-2 text-gray-700 hover:text-secondary transition"
                             onClick={() => setIsMobileMenuOpen(false)}
@@ -225,11 +217,11 @@ export default function Navbar() {
             ))}
 
             {/* Mobile CTA */}
-            <div className="pt-6 border-t mt-4">
+            <div className="pt-6 border-t">
               <Link
                 href="/contact"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="btn-primary w-full py-4 text-lg flex items-center justify-center font-medium"
+                className="btn-primary w-full py-4 text-lg flex items-center justify-center"
               >
                 Get In Touch
               </Link>
