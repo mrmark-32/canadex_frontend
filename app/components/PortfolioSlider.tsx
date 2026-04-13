@@ -103,7 +103,6 @@ export default function PortfolioSlider() {
                     <img
                       src={item.image || "https://picsum.photos/600/400?random=5"}
                       alt={item.title}
-                      fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-4 left-4">
