@@ -1,59 +1,105 @@
+import Image from "next/image";
+import Navbar from "./components/Navbar";
 import Link from "next/link";
+import HeroBanner from "@/app/Assets/HeroBanner/cybersecurity.png";
+import ServicesSlider from "./components/ServicesSlider";
+import CTASection from "./components/CTASection";
+import BrandLogos from "./components/BrandLogos";
+import PortfolioSlider from "./components/PortfolioSlider";
+import WhyUs from "./components/WhyUs";
+import Hrline from "./components/HrLine";
+import ServicesGrid from "./components/ServicesGrid";
+import BlogSlider from "./components/BlogSlider";
+import AwardsSection from "./components/AwardsSection";
+
 
 export default function Home() {
   return (
     <div className="min-h-screen">
-      {/* Navbar */}
-      <nav className="bg-red-600 text-white py-4">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">🍁</span>
-            <h1 className="text-3xl font-bold">Canadex</h1>
-          </div>
-          <div className="flex gap-8">
-            <Link href="/" className="hover:underline">Home</Link>
-            <Link href="/listings" className="hover:underline">Listings</Link>
-            <Link href="/post" className="hover:underline">Post Listing</Link>
-          </div>
-        </div>
-      </nav>
+      {/* Hero Section with Maple Red Background */}
+      <div className=" relative overflow-hidden">
+        <div className="container">
+          <div className="relative z-10  mx-auto ">
+            <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+              {/* LEFT SIDE – Text content – 7 columns (≈70%) */}
+              <div className="lg:col-span-8 text-center lg:text-left">
+                <h6 className="text-lg sm:text-1xl font-medium tracking-wide text-primarycolor pb-4">
+                  Canedex Smart Solutions
+                </h6>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight">
+                  <span className="block text-primarycolor">
+                    Powering innovation{" "}
+                  </span>
+                  <span className="block">with generative AI</span>
+                </h1>
 
-      {/* Hero */}
-      <header className="bg-gradient-to-r from-red-600 to-red-700 text-white py-24">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-6xl font-bold mb-6">Your Gateway to Canadian Excellence</h2>
-          <p className="text-2xl mb-10">Buy • Sell • Connect • Maple Strong</p>
-          <Link
-            href="/listings"
-            className="inline-block bg-white text-red-600 px-10 py-4 rounded-full text-xl font-semibold hover:bg-yellow-300 transition"
-          >
-            Browse Listings →
-          </Link>
-        </div>
-      </header>
+                <p className="mt-6  text-gray-600 leading-relaxed max-w-3xl mx-auto lg:mx-0">
+                  We build custom software, scalable digital products, and
+                  dedicated development teams that put people at the center of
+                  innovation — delivering real business impact with transparency
+                  and care.
+                </p>
 
-      {/* Quick stats / features */}
-      <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-3 gap-8">
-        <div className="text-center">
-          <div className="text-5xl mb-4">🍁</div>
-          <h3 className="text-2xl font-semibold">100% Canadian</h3>
-          <p className="text-gray-600">Products & services from coast to coast</p>
-        </div>
-        <div className="text-center">
-          <div className="text-5xl mb-4">🔥</div>
-          <h3 className="text-2xl font-semibold">Live Marketplace</h3>
-          <p className="text-gray-600">Real-time listings &amp; deals</p>
-        </div>
-        <div className="text-center">
-          <div className="text-5xl mb-4">🤝</div>
-          <h3 className="text-2xl font-semibold">Trusted Community</h3>
-          <p className="text-gray-600">Verified Canadian sellers</p>
+                <div className="mt-10 flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-primary hover:bg-red-700 rounded-lg transition shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  >
+                    Start a Project
+                    <svg
+                      className="ml-2 w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
+                    </svg>
+                  </Link>
+
+                  <Link
+                    href="/services"
+                    className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-red-primary bg-border-primary border-2 border-primary hover:bg-primary/5 rounded-lg transition"
+                  >
+                    Explore Services
+                  </Link>
+                </div>
+              </div>
+
+              {/* RIGHT SIDE – Image – 5 columns (≈30%) */}
+              <div className="relative hidden lg:block lg:col-span-4">
+                <div className="relative">
+                  <Image
+                    src={HeroBanner}
+                    alt="Cybersecurity and human-centered technology"
+                    width={400}
+                    priority
+                    quality={100}
+                  />
+
+                  {/* Decorative floating accents */}
+                  <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
+                  <div className="absolute -top-12 -left-12 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <footer className="bg-gray-900 text-white py-12 text-center">
-        <p>&copy; 2026 Canadex • Built with ❤️ for Canada</p>
-      </footer>
+      <ServicesSlider />
+      <CTASection/>
+      <BrandLogos/>
+      <PortfolioSlider />
+      <WhyUs/>
+      <Hrline />
+      <ServicesGrid/>
+      <BlogSlider />
+      <AwardsSection />
     </div>
   );
 }

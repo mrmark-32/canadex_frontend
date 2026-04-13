@@ -3,13 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --primary: #ffffff;
+  --secondary: #c8102e;     
+  --accent: #f5c518;        /* Gold accent */
+  --section: #f3f3f4;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +16,137 @@
   }
 }
 
+/* ==================== CONTAINER ==================== */
+.container {
+  max-width: 1360px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;   /* 24px */
+  padding-right: 1.5rem;
+}
+
+/* Responsive padding */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* ==================== UTILITIES ==================== */
+.white-bg { background-color: var(--background); }
+.red-primary { background-color: var(--secondary); }
+.text-primarycolor { color: var(--secondary); }
+.sectiongraycolor {background-color: var(--section);}
+
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.bg-primary { background-color: var(--primary); }
+.bg-secondary { background-color: var(--secondary); }
+
+
+/* Border Utilities */
+.border-primary { 
+  border: 1px solid var(--secondary); 
+}
+
+.border-light {
+  border: 1px solid #e5e7eb; /* Light gray */
+}
+
+.border-light:hover {
+  border-color: var(--secondary);
+}
+
+/* ==================== BASE STYLES ==================== */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Sora', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* Headings - Syne Font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+span {
+  font-family: 'Sora', system-ui, sans-serif;
+}
+
+h1 { font-size: 3.5rem; }     /* 56px */
+h2 { font-size: 2.625rem; }   /* 42px */
+h3 { font-size: 2rem; }       /* 32px */
+h4 { font-size: 1.75rem; }    /* 28px */
+h5 { font-size: 1.5rem; }     /* 24px */
+h6 { font-size: 1.25rem; }    /* 20px */
+
+/* Links */
+a {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--secondary);
+}
+
+/* ==================== BUTTONS ==================== */
+.btn-primary {
+  background-color: var(--secondary);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background-color: #a50d24;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  border: 2px solid var(--secondary);
+  color: var(--secondary);
+  padding: 12px 30px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background-color: var(--secondary);
+  color: white;
+}
+
+/* ==================== RED ACCENTS ==================== */
+.text-maple-red { color: #c8102e; }
+.bg-maple-red { background-color: #c8102e; }
+
+/* ==================== SERVICE CARD BORDER ==================== */
+.service-card {
+  border: 1px solid #e5e7eb;           /* Light gray border */
+  transition: all 0.3s ease;
+}
+
+.service-card:hover {
+  border-color: var(--secondary);      /* Red border on hover */
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 
+              0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
